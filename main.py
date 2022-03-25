@@ -65,7 +65,7 @@ def drawLine(myturtle=None, x_start=0, y_start=0, x_end=0, y_end=0):
   myturtle.goto((x_end, y_end))
 
 def drawCircle(myturtle=None, radius=0):
-  ''''''Draws the square 
+  '''Draws the square 
   args: myturtle: (Turtle) turtle object
   radius: (int) radius of circle
   return: none
