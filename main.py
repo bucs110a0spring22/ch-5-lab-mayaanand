@@ -31,8 +31,131 @@ import time
 #########################################################
 #                   Your Code Goes Below                #
 #########################################################
+def drawSquare(myturtle=None, width=0, top_left_x=0, top_left_y=0):
+  '''
+	draws a square centered in top left (top_left_x, top_left_y) of width (width)
+	args: myturtle: (Turtle) turtle object
+        width: (int) width of square
+        top_left_x: (int) top left x cordinate of square
+        top_left_y: (int) top left y cordinate of square
+	return: None
+	'''
+  myturtle.up()
+  myturtle.goto((top_left_x, top_left_y)) # go to top left
+  myturtle.down()
+  myturtle.goto((top_left_x, top_left_y-width))  # go to bottom left
+  myturtle.goto((top_left_x+width, top_left_y-width)) # go to bottom right
+  myturtle.goto((top_left_x+width, top_left_y))  # go to top right
+  myturtle.goto((top_left_x, top_left_y))  # go to top left
 
 
+def drawLine(myturtle=None, x_start=0, y_start=0, x_end=0, y_end=0):
+  '''
+  Draws the square 
+  args: myturtle: (Turtle) turtle object
+  x_start: (int) starting x coordinate
+  y_start: (int) starting y coordinate
+  x_end: (int) ending x coordinate
+  y_end: (int) ending y coordinate
+  return: none
+  '''
+  myturtle.up()
+  myturtle.goto((x_start, y_start))
+  myturtle.down()
+  myturtle.goto((x_end, y_end))
+
+def drawCircle(myturtle=None, radius=0):
+  ''''''Draws the square 
+  args: myturtle: (Turtle) turtle object
+  radius: (int) radius of circle
+  return: none
+  '''
+  myturtle.up()
+  myturtle.goto((0, -1))
+  myturtle.down()
+  myturtle.circle(radius)
+
+def isInCircle(myturtle=None, circle_center_x=0, circle_center_y=0, radius=0):
+  '''Defines whether the dart lands in the circle
+  args: myturtle: (Turtle) turtle object
+  circle_center_x: (int) x coordinate of center of circle
+  circle_center_y: (int) y coordinate of center of circle
+  radius: (int) radius of circle
+  return: none
+  '''
+  return myturtle.distance((circle_center_x,circle_center_y)) < radius
+  
+def setUpDartboard(myscreen, myturtle):
+  ''' shows the dartboard 
+  args: myscreen: (Screen) screen object
+  myturtle: (Turtle) turtle object
+  return: None
+  '''
+  drawSquare(myturtle, width=2, top_left_x=-1, top_left_y=1)
+  drawLine(myturtle, -1, 0, 1, 0)
+  drawLine(myturtle, 0, -1, 0, 1)
+  drawCircle(myturtle, 1)
+
+def throwDart(myturtle=None):
+  ''' marks where a dart lands on the graph
+  args: myturtle: (Turtle) turtle object
+  return: None
+  '''
+  x = random.uniform(-1, 1)
+  y = random.uniform(-1, 1)
+  myturtle.up()
+  myturtle.goto((x,y))
+  myturtle.down()
+  if isInCircle(myturtle, 0, 0, 1):  # Green if inside circle
+    myturtle.dot(5, "green")
+  else:
+    myturtle.dot(5, "red")  # Red if outside circle
+
+def playDarts(myturtle=None):
+  ''' Simulates two players throwing darts in a game
+  args: myturtle: (Turtle) turtle object
+  return: None
+  '''
+  print("**** Starting Dart Game ****")
+  # player 1's simulation
+  print("--- Player 1 Turn ---")
+  player1 = 0
+  for i in range(10):
+    throwDart(myturtle)
+    if isInCircle(myturtle, radius=1):
+      player1 += 1  # increment score
+      print("Player 1 hits the dartboard!")
+    else:
+      print("Player 1 missed the dartboard!")
+  print("--- Player 2 Turn ---")
+  # player 2's simulation
+  player2 = 0
+  for i in range(10):
+    throwDart(myturtle)
+    if isInCircle(myturtle, radius=1):
+      player2 += 1  # increment score
+      print("Player 2 hits the dartboard!")
+    else:
+      print("Player 2 missed the dartboard!")
+
+  if player1 > player2:
+    print("Player 1 wins with {} darts. Player 2 had {} darts".format(player1, player2))
+  elif player1 < player2:
+    print("Player 2 wins with {} darts. Player 1 had {} darts".format(player2, player1))
+  else:
+    print("There is a tie! Both players have a score of {}".format(player1))
+  print("**** End of Dart Game ****")
+
+def montePi(myturtle=None, num_darts=0):
+
+  incircle = 0
+  for i in range(num_darts):
+    throwDart(myturtle)
+    if isInCircle(myturtle, radius=1):
+      incircle += 1  # increment score
+
+  return (incircle/num_darts)*4
+    
 
 #########################################################
 #         Do not alter any code below here              #
@@ -49,6 +172,7 @@ def main():
 
     #Create window, turtle, set up window as dartboard
     window = turtle.Screen()
+    window.setworldcoordinates(-2,-2, 2,2)
     darty = turtle.Turtle()
     darty.speed(0) # as fast as it will go!
     setUpDartboard(myscreen=window, myturtle=darty)
@@ -81,5 +205,6 @@ def main():
     print("\tPart C Complete...")
     # Don't hide or mess with window while it's 'working'
     window.exitonclick()
+  
 
 main()

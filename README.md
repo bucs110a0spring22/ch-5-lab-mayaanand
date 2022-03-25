@@ -8,18 +8,20 @@
 _Replace anything surrounded by the `< >` symbols._
 
 ## SUMMARY:
- < Provide a short description of your program's functionality. No more than a couple sentences. >
+ Creates a dart board, throws darts and plays a game between two players. Uses monte carlo to make the process more efficient.
 
 ## GRACE DAYS
-Grace days used for this assignment: < # >
+Grace days used for this assignment: 1
 
-Grace days remaining: < # >/5
+Grace days remaining: 4/5
 
 ## KNOWN BUGS AND INCOMPLETE PARTS:
- < What parts of the project you were not able to complete >
-
+ none
 ## REFERENCES:
- < List any outside resources used >
-
+https://docs.python.org/3.7/library/turtle.html#turtle.setworldcoordinates)
+https://stackoverflow.com/
+https://study.com/academy/lesson/practical-application-for-python-using-if-statements.html
+https://www.youtube.com/watch?v=U00Kseb6SB4
+https://pythonprogramming.net/monte-carlo-simulator-python/
 ## MISCELLANEOUS COMMENTS:
- < Anything you would like the grader to know >
+ This was hard. 
