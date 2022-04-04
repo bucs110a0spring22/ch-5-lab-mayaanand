@@ -1,27 +1,25 @@
 #### CS 110
-# Chapter 5 - Lab - Selection
-
-### [Assignment Description](https://docs.google.com/document/d/1QfPsRfo1kZoQw4p0DhjxZskNfE0eLAV6Z6SgPSleDM4/edit?usp=sharing)
+# Midterm - Python Programming
 
 ***
 
 _Replace anything surrounded by the `< >` symbols._
 
 ## SUMMARY:
- This code is now object oriented and can now have multiple customizable players play a dart game. Each player also has a skill level 1-10 and now have a target to try and hit. Finally, a new game mode provides points that show how far away from the center it lands.  
+What did you clean up?:
+This code is now object oriented which makes it more modular, easier to use, and organizes everything. 
+Summary of function(s) added:
 
-## GRACE DAYS
-Grace days used for this assignment: 0
-
-Grace days remaining: 4/5
-
+Summary of Feature Added:
+A New game mode where there can be multiple customizable players with a skill level of 1-10 and the points show how far from the center the dart lands. 
 ## KNOWN BUGS AND INCOMPLETE PARTS:
- none
+none
 ## REFERENCES:
-https://docs.python.org/3.7/library/turtle.html#turtle.setworldcoordinates)
+(https://docs.python.org/3.7/library/turtle.html#turtle.setworldcoordinates)
 https://stackoverflow.com/
 https://study.com/academy/lesson/practical-application-for-python-using-if-statements.html
 https://www.youtube.com/watch?v=U00Kseb6SB4
-https://pythonprogramming.net/monte-carlo-simulator-python/
+https://pythonprogramming.net/monte-carlo-simulator-python/)
 ## MISCELLANEOUS COMMENTS:
- monte carlo approximation was taken out 
+monte carlo approximation taken out
+
