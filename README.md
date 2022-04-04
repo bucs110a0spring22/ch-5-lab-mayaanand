@@ -8,10 +8,10 @@
 _Replace anything surrounded by the `< >` symbols._
 
 ## SUMMARY:
- Creates a dart board, throws darts and plays a game between two players. Uses monte carlo to make the process more efficient.
+ This code is now object oriented and can now have multiple customizable players play a dart game. Each player also has a skill level 1-10 and now have a target to try and hit. Finally, a new game mode provides points that show how far away from the center it lands.  
 
 ## GRACE DAYS
-Grace days used for this assignment: 1
+Grace days used for this assignment: 0
 
 Grace days remaining: 4/5
 
@@ -24,4 +24,4 @@ https://study.com/academy/lesson/practical-application-for-python-using-if-state
 https://www.youtube.com/watch?v=U00Kseb6SB4
 https://pythonprogramming.net/monte-carlo-simulator-python/
 ## MISCELLANEOUS COMMENTS:
- This was hard. 
+ monte carlo approximation was taken out 

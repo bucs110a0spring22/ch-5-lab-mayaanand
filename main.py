@@ -28,9 +28,25 @@ import turtle
 import random
 import time
 
+import math # added math
+import matplotlib
+
 #########################################################
 #                   Your Code Goes Below                #
 #########################################################
+
+def movePen(t=None, x=0, y=0):
+  '''
+	move the turtle position and ensure the pen dosen't drag
+  args: t: (Turtle) turtle object
+        x: (int) x coordinate to move to
+        y: (int) y coordinate to move to
+	return: None
+	'''
+  t.up()
+  t.goto(x, y)
+  t.down()
+
 def drawSquare(myturtle=None, width=0, top_left_x=0, top_left_y=0):
   '''
 	draws a square centered in top left (top_left_x, top_left_y) of width (width)
@@ -40,14 +56,11 @@ def drawSquare(myturtle=None, width=0, top_left_x=0, top_left_y=0):
         top_left_y: (int) top left y cordinate of square
 	return: None
 	'''
-  myturtle.up()
-  myturtle.goto((top_left_x, top_left_y)) # go to top left
-  myturtle.down()
+  movePen(myturtle, top_left_x, top_left_y)
   myturtle.goto((top_left_x, top_left_y-width))  # go to bottom left
   myturtle.goto((top_left_x+width, top_left_y-width)) # go to bottom right
   myturtle.goto((top_left_x+width, top_left_y))  # go to top right
   myturtle.goto((top_left_x, top_left_y))  # go to top left
-
 
 def drawLine(myturtle=None, x_start=0, y_start=0, x_end=0, y_end=0):
   '''
@@ -59,20 +72,17 @@ def drawLine(myturtle=None, x_start=0, y_start=0, x_end=0, y_end=0):
   y_end: (int) ending y coordinate
   return: none
   '''
-  myturtle.up()
-  myturtle.goto((x_start, y_start))
-  myturtle.down()
+  movePen(myturtle, x_start, y_start)
   myturtle.goto((x_end, y_end))
-
-def drawCircle(myturtle=None, radius=0):
+  
+# Added center argument
+def drawCircle(myturtle=None, radius=0, center_x=0):
   '''Draws the square 
   args: myturtle: (Turtle) turtle object
   radius: (int) radius of circle
   return: none
   '''
-  myturtle.up()
-  myturtle.goto((0, -1))
-  myturtle.down()
+  movePen(myturtle, center_x, -radius)
   myturtle.circle(radius)
 
 def isInCircle(myturtle=None, circle_center_x=0, circle_center_y=0, radius=0):
@@ -84,67 +94,88 @@ def isInCircle(myturtle=None, circle_center_x=0, circle_center_y=0, radius=0):
   return: none
   '''
   return myturtle.distance((circle_center_x,circle_center_y)) < radius
+
+class Board:
   
-def setUpDartboard(myscreen, myturtle):
-  ''' shows the dartboard 
-  args: myscreen: (Screen) screen object
-  myturtle: (Turtle) turtle object
-  return: None
-  '''
-  drawSquare(myturtle, width=2, top_left_x=-1, top_left_y=1)
-  drawLine(myturtle, -1, 0, 1, 0)
-  drawLine(myturtle, 0, -1, 0, 1)
-  drawCircle(myturtle, 1)
+  def __init__(self, myturtle, scale):
+    self.t = myturtle
+    self.scale = scale
 
-def throwDart(myturtle=None):
-  ''' marks where a dart lands on the graph
-  args: myturtle: (Turtle) turtle object
-  return: None
-  '''
-  x = random.uniform(-1, 1)
-  y = random.uniform(-1, 1)
-  myturtle.up()
-  myturtle.goto((x,y))
-  myturtle.down()
-  if isInCircle(myturtle, 0, 0, 1):  # Green if inside circle
-    myturtle.dot(5, "green")
-  else:
-    myturtle.dot(5, "red")  # Red if outside circle
+  def setUpDartboard(self):
+    ''' shows the dartboard 
+    args: myscreen: (Screen) screen object
+    myturtle: (Turtle) turtle object
+    return: None
+    '''
+    scale = self.scale
+    drawSquare(self.t, width=(scale*2), top_left_x=-scale, top_left_y=scale)
+    drawLine(self.t, -scale, 0, scale, 0)
+    drawLine(self.t, 0, -scale, 0, scale)
+    movePen(self.t, -5,0)
+    drawCircle(self.t, scale, 0)
 
-def playDarts(myturtle=None):
-  ''' Simulates two players throwing darts in a game
-  args: myturtle: (Turtle) turtle object
-  return: None
-  '''
-  print("**** Starting Dart Game ****")
-  # player 1's simulation
-  print("--- Player 1 Turn ---")
-  player1 = 0
-  for i in range(10):
-    throwDart(myturtle)
-    if isInCircle(myturtle, radius=1):
-      player1 += 1  # increment score
-      print("Player 1 hits the dartboard!")
-    else:
-      print("Player 1 missed the dartboard!")
-  print("--- Player 2 Turn ---")
-  # player 2's simulation
-  player2 = 0
-  for i in range(10):
-    throwDart(myturtle)
-    if isInCircle(myturtle, radius=1):
-      player2 += 1  # increment score
-      print("Player 2 hits the dartboard!")
-    else:
-      print("Player 2 missed the dartboard!")
+  def resetPos(self):
+    movePen(self.t, -self.scale, self.scale)
+  
+  def playGame(self, players, rounds=1, gameType="DISTANCE"):
+    self.t.clear()
+    self.setUpDartboard()
+    
+    scores = {}  # initialize scores
+    for player in players:
+      scores[player] = 0
+    
+    for round in range(rounds):
 
-  if player1 > player2:
-    print("Player 1 wins with {} darts. Player 2 had {} darts".format(player1, player2))
-  elif player1 < player2:
-    print("Player 2 wins with {} darts. Player 1 had {} darts".format(player2, player1))
-  else:
-    print("There is a tie! Both players have a score of {}".format(player1))
-  print("**** End of Dart Game ****")
+      # Pick a random target on the grid
+      (target_x,target_y) = (0,0)
+      
+      for player in players:
+        player.throwDart(self.t, target_x, target_y, self.scale)
+
+        if gameType == "DISTANCE":
+          d = self.t.distance(target_x,target_y)
+          scores[player] += self.scale-d
+          print("{}'s landed {} from the center!".format(player.getName(), d))
+        elif gameType == "STANDARD":
+          if isInCircle(self.t, 0, 0, self.scale):
+            print("{} hit the board!".format(player.getName()))
+            scores[player] += 1
+
+    winner = max(scores, key=scores.get)
+    print()
+    print("********* {} Match Results *********".format(gameType))
+    print("Winner: {}".format(winner.getName()))
+    for player,score in scores.items():
+      print("{}: {} (average score per round: {})".format(player.getName(), score, score/rounds))
+    print("***********************************".format(gameType))
+    print()
+    
+class Player:
+
+  def __init__(self, name, color, skill):
+    if skill < 1 or skill > 10: raise Exception('Invalid skill level, must be 1-10')
+    self.name = name
+    self.skill = skill  # 1-10
+    self.color = color
+
+  def throwDart(self, myturtle, target_x, target_y, scale=1):
+    ''' marks where a dart lands on the graph
+    args: myturtle: (Turtle) turtle object
+    return: None
+    '''
+    skill = 10 - self.skill
+    x = random.uniform(-skill, skill)
+    y = random.uniform(-skill, skill)
+
+    shot_x = target_x + x/scale
+    shot_y = target_y + y/scale
+    movePen(myturtle, shot_x, shot_y)
+    myturtle.dot(5, self.color)
+
+  def getName(self):
+    return self.name
+    
 
 def montePi(myturtle=None, num_darts=0):
 
@@ -172,38 +203,27 @@ def main():
 
     #Create window, turtle, set up window as dartboard
     window = turtle.Screen()
-    window.setworldcoordinates(-2,-2, 2,2)
+    window.setworldcoordinates(-5,-5, 5,5)
     darty = turtle.Turtle()
     darty.speed(0) # as fast as it will go!
-    setUpDartboard(myscreen=window, myturtle=darty)
 
-    # Loop for 10 darts to test your code
-    for i in range(10):
-        throwDart(darty)
-        if isInCircle(myturtle=darty, radius=1):
-          print("You hit the dartboard!")
-    print("\tPart A Complete...")
-    print("=========== Part B ===========")
-    darty.clear()
-    setUpDartboard(myscreen=window, myturtle=darty)
-    playDarts(myturtle=darty)
-    print("\tPart B Complete...")
-    # Keep the window up until dismissed
-    print("=========== Part C ===========")
-    darty.clear()
-    setUpDartboard(myscreen=window, myturtle=darty)
+    player1 = Player("Maya", "red", 2)
+    player2 = Player("Leah", "blue", 5)
+    player3 = Player("Rocky", "green", 6)
+    player4 = Player("Oliver", "purple", 8)
+    players = [player1,player2,player3,player4]
+  
+    b = Board(darty, scale=3)
+    b.playGame(players, 10, "STANDARD")
+    b.playGame(players, 10, "DISTANCE")
+  
     
-    # Includes the following code in order to update animation periodically
-    # instead of for each throw (saves LOTS of time):
-    BATCH_OF_DARTS = 5000
-    window.tracer(BATCH_OF_DARTS)
-
-    # Conduct simulation and print result
-    number_darts = int(input("\nPlease input the number of darts to be thrown in the simulation:  "))
-    approx_pi = montePi(myturtle=darty, num_darts=number_darts)
-    print("\nThe estimation of pi using "+str(number_darts)+" virtual darts is " + str(approx_pi))
-    print("\tPart C Complete...")
-    # Don't hide or mess with window while it's 'working'
+    
+    b1 = Board(darty, scale=2)
+    # Loop for 10 darts to test your code
+    b1.playGame([player1, player2], 10, "STANDARD")
+    print("\tPart A Complete...")
+    
     window.exitonclick()
   
 
